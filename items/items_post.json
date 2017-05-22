@@ -1,0 +1,140 @@
+{
+  "background": "tree-scene.png",
+  "list": {
+    "bird": {
+      "pos": {
+        "x": "0.1",
+        "y": "0.3"
+      },
+      "img": {
+        "1": "bird1.png",
+        "2": "bird1.png"
+      },
+      "text": {
+        "1": {
+          "text": "the bird's feathers' color is summer blue"
+        },
+        "2": {
+          "text": "the bird flew south for the winter"
+        },
+        "3": {
+          "text": "the blue bird likes to eat worms"
+        },
+        "4": {
+          "text": "the beautiful bird sings melodic tunes"
+        },
+        "5": {
+          "text": "the bird has three eggs in its nest"
+        }
+      }
+    },
+    "dragon": {
+      "pos": {
+        "x": "0.5",
+        "y": "0.5"
+      },
+      "img": {
+        "1": "dragon1.png",
+        "2": "dragon1.png"
+      },
+      "text": {
+      }
+    },
+    "princess": {
+      "pos": {
+        "x": "0.2",
+        "y": "0.08"
+      },
+      "img": {
+        "1": "princess.png",
+        "2": "princess.png"
+      },
+      "text": {
+      }
+    },
+    "dinosaur": {
+      "pos": {
+        "x": "1.0",
+        "y": "0.1"
+      },
+      "img": {
+        "1": "dino2.png",
+        "2": "dino2.png"
+      },
+      "text": {
+        "1": {
+          "text": "The name dinosaur means frighteningly big lizard"
+        },
+        "2": {
+          "text": "Scientists now think that even large dinosaurs like Tyrannosaurus Rex may have had feathers"
+        },
+        "3": {
+          "text": "Dinosaurs ruled the Earth for over 160 million years"
+        },
+        "4": {
+          "text": "The first dinosaur to be formally named was the Megalosaurus"
+        },
+        "5": {
+          "text": "A person who studies dinosaurs is known as a paleontologist."
+        },
+        "6": {
+          "text": "the largest dinosaurs were actually plant eaters."
+        },
+        "7": {
+          "text": "Birds descended from a type of dinosaurs known as theropods."
+        },
+        "8": {
+          "text": "Stegosaurus had spikes on its tail."
+        },
+        "9": {
+          "text": "Triceratops’s head had three horns"
+        },
+        "10": {
+          "text": "Pterodactyls are not dinosaurs, they were flying reptiles"
+        }
+      }
+    },
+    "rabbit": {
+      "pos": {
+        "x": "0.5",
+        "y": "0.15"
+      },
+      "img": {
+        "1": "rabbit.png",
+        "2": "rabbit.png"
+      },
+      "text": {
+        "1": {
+          "text": "the rabbit's name is carrot."
+        },
+        "2": {
+          "text": "that's because it loves to eat carrots"
+        },
+        "3": {
+          "text": "one day carrot went to the forest to meet its friends"
+        },
+        "4": {
+          "text": "it suddenly saw a beautiful yellow flower"
+        },
+        "5": {
+          "text": "carrot was hungry so it ate the flower"
+        },
+        "6": {
+          "text": "the yellow flower was not that tasty"
+        },
+        "7": {
+          "text": "carrot was sad, so it went home"
+        },
+        "8": {
+          "text": "near its home was a garden of carrots"
+        },
+        "9": {
+          "text": "the rabbit ate two carrots that day"
+        },
+        "10": {
+          "text": "it went to sleep and dreamt of yellow carrots"
+        }
+      }
+    }
+  }
+}
