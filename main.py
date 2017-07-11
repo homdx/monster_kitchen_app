@@ -14,8 +14,17 @@ class ZeroScreen(Screen):
 
 
 class TestScreen(Screen):
-    pass
 
+    def on_enter(self, *args):
+        # TODO: clear all marked buttons
+        pass
+
+
+class IntroScreen(Screen):
+
+    def on_enter(self, *args):
+        # TODO: talk
+        pass
 
 class MonsterKitchenApp(App):
     game_screen = None
@@ -31,6 +40,9 @@ class MonsterKitchenApp(App):
         screen.ids['subject_id'].bind(text=screen.ids['subject_id'].on_text_change)
         self.sm.add_widget(screen)
 
+        screen = IntroScreen(name='intro_screen')
+        self.sm.add_widget(screen)
+
         screen = TestScreen()
         self.sm.add_widget(screen)
 
@@ -39,8 +51,9 @@ class MonsterKitchenApp(App):
         self.game_screen.add_widget(self.game_screen.curiosity_game.the_widget)
         self.sm.add_widget(self.game_screen)
 
-        self.sm.current = 'zero_screen'
+        # self.sm.current = 'zero_screen'
         # self.sm.current = 'test_screen'
+        self.sm.current = 'intro_screen'
         return self.sm
 
     def init_communication(self):
@@ -61,6 +74,7 @@ class MonsterKitchenApp(App):
 
     def next_monster(self):
         self.sm.current = 'the_game'
+
 
 if __name__ == '__main__':
     MonsterKitchenApp().run()

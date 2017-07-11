@@ -23,38 +23,10 @@ LANGUAGE = 'English'  # 'Hebrew'
 items_path = 'items/'
 number_of_tries = 3
 
+class TestScreen:
 
-class Item(LoggedButton):
-    attributes = {}
-
-    cg = None
-    base_pos = None
-    base_size = None
-
-    moved = False
-
-    def on_press(self, *args):
-        self.moved = True
-        self.cg.item_moved(self)
-
-    def on_size(self, *args):
-        if not self.moved:
-            base_size = self.cg.size
-            true_pos = (int(float(base_size[0]) * self.base_pos[0]), int(float(base_size[1]) * self.base_pos[1]))
-            true_size = (int(float(base_size[0]) * self.base_size[0]), int(float(base_size[1]) * self.base_size[1]))
-
-            if self.pos != true_pos and self.size != true_size:
-                self.pos = true_pos
-                self.size = true_size
-
-    def to_base_size(self):
-        base_size = self.cg.size
-        true_size = (int(float(base_size[0]) * self.base_size[0]), int(float(base_size[1]) * self.base_size[1]))
-        self.size = true_size
-
-    def on_pos(self, *args):
-        self.to_base_size()
-        print(args)
+    def on_enter(self):
+        print('here')
 
 class Monster(Image):
     cg = None
@@ -129,6 +101,8 @@ class CuriosityGame:
 
     current_monster = -1
 
+    attribute_images = []
+
     def __init__(self, the_app):
         self.the_widget = CuriosityWidget(self)
         self.size = [100,100]
@@ -169,11 +143,26 @@ class CuriosityGame:
         self.monster.base_size = [float(x) for x in self.monsters['size'].split(',')]
         self.change_monster(self.current_monster)
 
+        self.attribute_images = {
+            'type': FoodWidget(self),
+            'color': FoodWidget(self),
+            'size': FoodWidget(self),
+        }
+
+        for i, ai in enumerate(self.attribute_images.values()):
+            ai.base_pos = (0.05 + 0.1 * i, 0.85)
+            ai.base_size = (0.1, 0.1)
+            ai.image_id.source = 'items/red.png'
+            ai.disabled = True
+
         # set widgets
         self.the_widget.clear_widgets()
         self.the_widget.add_widget(self.monster)
         for key, value in self.items.items():
             self.the_widget.add_widget(value)
+
+        for ai in self.attribute_images.values():
+            self.the_widget.add_widget(ai)
 
         self.update_pos_size(self.size)
 
@@ -181,6 +170,16 @@ class CuriosityGame:
         self.size = app_size
         if self.items:
             for i_name, i in self.items.items():
+                pos = i.base_pos
+                size = i.base_size
+                i.pos = (int(pos[0] * self.size[0]), int(pos[1] * self.size[1]))
+                i.size = (int(size[0] * self.size[0]), int(size[1] * self.size[1]))
+                i.image_id.pos = (int(pos[0] * self.size[0]), int(pos[1] * self.size[1]))
+                i.image_id.size = (int(size[0] * self.size[0]), int(size[1] * self.size[1]))
+                i.button_id.pos = i.image_id.pos
+                i.button_id.size = i.image_id.size
+        if self.attribute_images:
+            for i_name, i in self.attribute_images.items():
                 pos = i.base_pos
                 size = i.base_size
                 i.pos = (int(pos[0] * self.size[0]), int(pos[1] * self.size[1]))
@@ -210,11 +209,21 @@ class CuriosityGame:
     def food_pressed(self, item):
         self.selected_item = item
         print(item.name, item.pos, item.attributes)
+        # set attributes
+        for a_name, a in item.attributes.items():
+            ai = self.attribute_images[a_name]
+            the_source = 'items/' + a + '.png'
+            ai.color = (1, 1, 1, 1)
+            ai.image_id.source = the_source
+
+        Clock.schedule_once(self.food_animation, 0.1)
+
+    def food_animation(self, dt):
         anim = Animation(x=self.monster.pos[0] + self.monster.size[0] / 2,
                          y=self.monster.pos[1] + self.monster.size[1] / 4,
                          duration=1)
         anim.bind(on_complete=self.finished_animation)
-        anim.start(item.image_id)
+        anim.start(self.selected_item.image_id)
 
     def finished_animation(self, *args):
         item = args[1]
@@ -253,9 +262,9 @@ class CuriosityGame:
         self.tries -= 1
         print('tries', self.tries)
         if self.tries == 0:
-            self.test_mosnter()
+            Clock.schedule_once(self.test_monster, 2)
 
-    def test_mosnter(self):
+    def test_monster(self, dt):
         self.the_app.test_monster(self.monster)
 
     def next_monster(self):

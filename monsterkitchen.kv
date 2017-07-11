@@ -21,7 +21,6 @@
             size_hint_y: None
             size_hint_x: None
 
-
 <ZeroScreen>:
     start_button_pre: start_button_pre
     subject_id: subject_id
@@ -54,18 +53,26 @@
             size: root.width * 0.4, root.height * 0.2
             pos: root.width * 0.55 - self.width * 0.5, root.height * 0.75 - self.height * 0.5
 
+<IntroScreen>:
+    Widget:
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'items/all_kitchen.png'
 
 <TestScreen>:
     name: 'test_screen'
     monster_id: monster_id
-    canvas:
-#        Rectangle:
-#            pos: self.pos
-#            size: self.size
-        Color:
-            rgba: 0.,0.,0.5,0.5
 
     BoxLayout:
+        canvas.before:
+            Color:
+                rgba: 0.3, 0.3, 0.9, 0.5
+            Rectangle:
+                # self here refers to the widget i.e BoxLayout
+                pos: self.pos
+                size: self.size
         orientation: 'horizontal'
         GridLayout:
             cols: 4
@@ -75,78 +82,51 @@
 
             BoxLayout:
                 Image:
-                    source: 'items/Asset 16_cat.png'
+                    source: 'items/fruit_vegetable.png'
                 LoggedCheckBox:
             BoxLayout:
                 Image:
-                    source: 'items/Asset 17_cat.png'
+                    source: 'items/meat_fish.png'
                 LoggedCheckBox:
             BoxLayout:
-                Label:
-                    text: 'םיקותמו םימחל'
-                    font_name: "fonts/the_font.ttf"
+                Image:
+                    source: 'items/bread_sweet.png'
                 LoggedCheckBox:
             BoxLayout:
-                Label:
-                    text: 'היתש'
-                    font_name: "fonts/the_font.ttf"
+                Image:
+                    source: 'items/liquid.png'
                 LoggedCheckBox:
             BoxLayout:
-                Label:
-                    text: 'םודא'
-                    font_name: "fonts/the_font.ttf"
+                Image:
+                    source: 'items/red.png'
                 LoggedCheckBox:
             BoxLayout:
-                Label:
-                    text: 'בוהצ'
-                    font_name: "fonts/the_font.ttf"
+                Image:
+                    source: 'items/yellow_orange.png'
                 LoggedCheckBox:
             BoxLayout:
-                Label:
-                    text: 'קורי'
-                    font_name: "fonts/the_font.ttf"
+                Image:
+                    source: 'items/blue_purple.png'
                 LoggedCheckBox:
             BoxLayout:
-                Label:
-                    text: 'לוחכ'
-                    font_name: "fonts/the_font.ttf"
+                Image:
+                    source: 'items/green.png'
                 LoggedCheckBox:
             BoxLayout:
-                Label:
-                    text: 'ןטק'
-                    font_name: "fonts/the_font.ttf"
+                Image:
+                    source: 'items/small.png'
                 LoggedCheckBox:
             BoxLayout:
-                Label:
-                    text: 'ינוניב'
-                    font_name: "fonts/the_font.ttf"
+                Image:
+                    source: 'items/medium.png'
                 LoggedCheckBox:
             BoxLayout:
-                Label:
-                    text: 'לודג'
-                    font_name: "fonts/the_font.ttf"
                 LoggedCheckBox:
+                    background_normal: 'items/big.png'
+                #Image:
+                #    source: 'items/big.png'
+                #LoggedCheckBox:
             BoxLayout:
-            BoxLayout:
-                Label:
-                    text: 'אנ'
-                    font_name: "fonts/the_font.ttf"
-                LoggedCheckBox:
-            BoxLayout:
-                Label:
-                    text: 'לשובמ'
-                    font_name: "fonts/the_font.ttf"
-                LoggedCheckBox:
-            BoxLayout:
-                Label:
-                    text: 'ךותח'
-                    font_name: "fonts/the_font.ttf"
-                LoggedCheckBox:
-            BoxLayout:
-                Label:
-                    text: 'ןגוטמ'
-                    font_name: "fonts/the_font.ttf"
-                LoggedCheckBox:
         BoxLayout:
             orientation: 'vertical'
             Image:
