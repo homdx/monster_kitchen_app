@@ -13,6 +13,10 @@ class ZeroScreen(Screen):
         KL.restart()
 
 
+class TestScreen(Screen):
+    pass
+
+
 class MonsterKitchenApp(App):
     game_screen = None
 
@@ -25,7 +29,9 @@ class MonsterKitchenApp(App):
 
         screen = ZeroScreen()
         screen.ids['subject_id'].bind(text=screen.ids['subject_id'].on_text_change)
+        self.sm.add_widget(screen)
 
+        screen = TestScreen()
         self.sm.add_widget(screen)
 
         self.game_screen = GameScreen(name='the_game')
@@ -34,6 +40,7 @@ class MonsterKitchenApp(App):
         self.sm.add_widget(self.game_screen)
 
         self.sm.current = 'zero_screen'
+        # self.sm.current = 'test_screen'
         return self.sm
 
     def init_communication(self):
@@ -45,7 +52,14 @@ class MonsterKitchenApp(App):
         KL.log.insert(action=LogAction.data, obj='FreeExplorationApp', comment='start')
 
     def press_start(self, pre_post):
-        self.game_screen.curiosity_game.filename = 'items_' + pre_post + '.json'
+        self.game_screen.curiosity_game.filename = 'items.json'
+        self.sm.current = 'the_game'
+
+    def test_monster(self, monster):
+        self.sm.current = 'test_screen'
+        self.sm.current_screen.monster_id.source = items_path + monster.img['neutral']
+
+    def next_monster(self):
         self.sm.current = 'the_game'
 
 if __name__ == '__main__':

@@ -4,7 +4,6 @@ from kivy.uix.scatter import Scatter
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.core.audio import SoundLoader
 from kivy.uix.floatlayout import FloatLayout
-from functools import partial
 from kivy.graphics import Rectangle
 from kivy.uix.label import Label
 from kivy.clock import Clock
@@ -12,102 +11,108 @@ from kivy_communication import *
 from hebrew_management import HebrewManagement
 from text_handling import *
 from kivy.uix.screenmanager import Screen
+from kivy.core.audio import SoundLoader
+from kivy.uix.image import Image
+from kivy.animation import Animation
+from food_widget import FoodWidget
+
+from functools import partial
+from copy import deepcopy
+
 LANGUAGE = 'English'  # 'Hebrew'
+items_path = 'items/'
+number_of_tries = 3
 
 
-class Item(Scatter, WidgetLogger):
-    SOMEONE_MOVED = False
+class Item(LoggedButton):
+    attributes = {}
 
-    item_lbl = ObjectProperty(None)
-    source = StringProperty()
-    img = {}
-    info = {}
-    current = 1
     cg = None
     base_pos = None
-    question = {}
-    i_moved = False
+    base_size = None
 
-    def change_img(self, im = '1'):
+    moved = False
+
+    def on_press(self, *args):
+        self.moved = True
+        self.cg.item_moved(self)
+
+    def on_size(self, *args):
+        if not self.moved:
+            base_size = self.cg.size
+            true_pos = (int(float(base_size[0]) * self.base_pos[0]), int(float(base_size[1]) * self.base_pos[1]))
+            true_size = (int(float(base_size[0]) * self.base_size[0]), int(float(base_size[1]) * self.base_size[1]))
+
+            if self.pos != true_pos and self.size != true_size:
+                self.pos = true_pos
+                self.size = true_size
+
+    def to_base_size(self):
+        base_size = self.cg.size
+        true_size = (int(float(base_size[0]) * self.base_size[0]), int(float(base_size[1]) * self.base_size[1]))
+        self.size = true_size
+
+    def on_pos(self, *args):
+        self.to_base_size()
+        print(args)
+
+class Monster(Image):
+    cg = None
+    base_pos = None
+    base_size = None
+    likes = None
+    name = ''
+    img = None
+
+    def change_img(self, im='neutral', sequence=0):
         if im in self.img:
-            self.source = self.img[im]
+            if im == 'eating':
+                self.source = items_path + self.img[im][sequence]
+            else:
+                self.source = items_path + self.img[im]
 
-    def on_transform_with_touch(self, touch):
-        pass
-        # if self.collide_point(*touch.pos):
-        #     self.play()
+    def on_size(self, *args):
+        base_size = self.cg.size
+        true_pos = (int(float(base_size[0]) * self.base_pos[0]), int(float(base_size[1]) * self.base_pos[1]))
+        true_size = (int(float(base_size[0]) * self.base_size[0]), int(float(base_size[1]) * self.base_size[1]))
 
-    def on_touch_down(self, touch):
-        super(Item, self).on_touch_down(touch)
-        if self.collide_point(*touch.pos):
-            if Item.SOMEONE_MOVED:
-                self.i_moved = False
-                self._set_do_translation(False)
-                return
-            Item.SOMEONE_MOVED = True
-            self.i_moved = True
-            self._set_do_translation(True)
-            self.force_on_touch_down(touch)
-            Clock.schedule_once(self.play, 0.5)
-
-    def on_touch_up(self, touch):
-        super(Item, self).on_touch_up(touch)
-        if self.collide_point(*touch.pos):
-            self.force_on_touch_up(touch)
-        Item.SOMEONE_MOVED = False
-        self.i_moved = False
-        self._set_do_translation(True)
-
-    def play(self, dt):
-        # if still has something to play
-        if self.current in self.info:
-            if 'audio' in self.info[self.current]:
-                # if not playing
-                if not self.cg.is_playing:
-                    self.info[self.current]['audio'].play()
-            elif 'text' in self.info[self.current]:
-                self.on_play()
-                TTS.speak([self.info[self.current]['text']], self.on_stop)
-
-    def on_play(self):
-        if self.current in self.info:
-            if 'audio' in self.info[self.current]:
-                super(Item, self).on_play_wl(self.info[self.current]['audio'].source)
-            elif 'text' in self.info[self.current]:
-                super(Item, self).on_play_wl(self.info[self.current]['text'])
-            self.cg.is_playing = True
-            self.change_img('2')
-
-    def on_stop(self, dt):
-        if self.current in self.info:
-            if 'audio' in self.info[self.current]:
-                super(Item, self).on_stop_wl(self.info[self.current]['audio'].source)
-            elif 'text' in self.info[self.current]:
-                super(Item, self).on_stop_wl(self.info[self.current]['text'])
-            self.cg.is_playing = False
-            self.current += 1
-            CuriosityGame.current += 1
-            self.change_img('1')
-
-    def get_text(self):
-        # if still has text
-        if self.current in self.info:
-            if 'text' in self.info[self.current]:
-                return self.info[self.current]['text'][::-1]
-        return None
+        if self.pos != true_pos and self.size != true_size:
+            self.pos = true_pos
+            self.size = true_size
 
 
 class GameScreen(Screen):
     the_app = None
     curiosity_game = None
+    current_monster = 0
 
     def start(self, the_app):
         self.the_app = the_app
-        self.curiosity_game = CuriosityGame()
+        self.curiosity_game = CuriosityGame(the_app)
+        self.current_monster = -1
 
     def on_enter(self, *args):
-        self.curiosity_game.load(self.the_app.root.size)
-        Clock.schedule_once(self.end_game, self.curiosity_game.game_duration)
+        self.current_monster += 1
+        self.curiosity_game.current_monster = self.current_monster
+        if self.current_monster == 0:
+            self.curiosity_game.load(self.the_app.root.size)
+            Clock.schedule_once(self.introduction, 0.1)
+        elif self.current_monster >= len(self.curiosity_game.monsters['list']):
+            self.the_app.sm.current = 'zero_screen'
+        else:
+            self.curiosity_game.start()
+
+    def introduction(self, dt):
+        # TTS.speak('This is the monsters kitchen. Each monster likes different things.')
+        # TTS.speak('But each monster has favorite tastes.')
+        # TTS.speak('Some like red things and red fruits the most.')
+        # TTS.speak('Other may like boiled things, but boiled cakes most of all.')
+        # TTS.speak('Your goal is to find what are each mosnters tastes.')
+        # TTS.speak('Fro each monster you can try ten things.')
+        # TTS.speak('In order to try, pick food from the fridge, choose whether to serve it raw, or cut, boil or fry it, before giving it to the mosnter.')
+        # TTS.speak('The mosnter will let you know if it likes what you gave it.')
+        # TTS.speak('In the end you will be asked whether you figured out the monsters tastes.')
+        TTS.speak(['Bon apetite.'])
         self.curiosity_game.start()
 
     def end_game(self, dt):
@@ -118,113 +123,175 @@ class CuriosityGame:
     items = {}
     current = 0
     the_widget = None
-    is_playing = False
     the_end = False
     game_duration = 120
     filename = 'items.json'
 
-    def __init__(self):
-        self.the_widget = CuriosityWidget()
+    current_monster = -1
 
-    def load(self, size=[100,100]):
-        # initialize items
-        items_path = 'items/'
+    def __init__(self, the_app):
+        self.the_widget = CuriosityWidget(self)
+        self.size = [100,100]
+        self.tries = 0
+        self.the_app = the_app
 
+    def load(self, size=None):
+        self.size = size
         items_json = JsonStore(items_path + self.filename)
         self.the_widget.update_background(items_path + items_json.get('background'))
-        items_list = items_json.get('list')
 
+        # initialize items
+        food_json = JsonStore(items_path + 'food.json')
+
+        items_list = food_json.get('data')
+        self.items = {}
         for name, value in items_list.items():
-            self.items[name] = Item(do_rotation=False, do_scale=False)
+            self.items[name] = FoodWidget(self) #Item()
             self.items[name].name = name
-            self.items[name].cg = self
-
-            if 'label' in value:
-                if LANGUAGE == 'Hebrew':
-                    self.items[name].item_lbl.text = value['label'][::-1]
-                elif LANGUAGE == 'English':
-                    self.items[name].item_lbl.text = value['label']
 
             if 'pos' in value:
-                self.items[name].base_pos = (int(float(value['pos']['x']) * size[1]), int(float(value['pos']['y']) * size[0]))
+                self.items[name].base_pos = [float(x) for x in value['pos']]
+                self.items[name].base_size = [float(x) for x in value['size']]
 
-            self.items[name].img = {}
-            if 'img' in value:
-                for ki, i in value['img'].items():
-                    self.items[name].img[ki] = items_path + i
-                self.items[name].change_img('1')
+            self.items[name].image_id.source = items_path + name + '.png'
 
-            self.items[name].info = {}
-            self.items[name].question = {}
-            if 'text' in value:
-                for kt, t in value['text'].items():
-                    self.items[name].info[int(kt)] = {'text': t['text']}
-                    try:
-                        self.items[name].info[int(kt)]['audio'] = SoundLoader.load(items_path + t['audio'])
-                        self.items[name].info[int(kt)]['audio'].bind(
-                                on_play=partial(self.on_play, name))
-                        self.items[name].info[int(kt)]['audio'].bind(
-                                on_stop=partial(self.on_stop, name))
-                    except:
-                        if 'audio' in t:
-                            Logger.info('audio: cant find ' + items_path + t['audio'])
-                    if 'question' in t:
-                        self.items[name].question[int(kt)] = {}
-                        self.items[name].question[int(kt)] = t['question']
+            if 'attributes' in value:
+                self.items[name].attributes = {
+                    'type': value['attributes'][0],
+                    'color': value['attributes'][1],
+                    'size': value['attributes'][2]
+                }
+
+        self.monsters = items_json.get('monsters')
+        self.monster = Monster()
+        self.monster.cg = self
+        self.monster.base_pos = [float(x) for x in self.monsters['pos'].split(',')]
+        self.monster.base_size = [float(x) for x in self.monsters['size'].split(',')]
+        self.change_monster(self.current_monster)
 
         # set widgets
         self.the_widget.clear_widgets()
+        self.the_widget.add_widget(self.monster)
         for key, value in self.items.items():
             self.the_widget.add_widget(value)
 
+        self.update_pos_size(self.size)
+
+    def update_pos_size(self, app_size):
+        self.size = app_size
+        if self.items:
+            for i_name, i in self.items.items():
+                pos = i.base_pos
+                size = i.base_size
+                i.pos = (int(pos[0] * self.size[0]), int(pos[1] * self.size[1]))
+                i.size = (int(size[0] * self.size[0]), int(size[1] * self.size[1]))
+                i.image_id.pos = (int(pos[0] * self.size[0]), int(pos[1] * self.size[1]))
+                i.image_id.size = (int(size[0] * self.size[0]), int(size[1] * self.size[1]))
+                i.button_id.pos = i.image_id.pos
+                i.button_id.size = i.image_id.size
+
     def start(self):
+        self.next_monster()
+
+    def reset_pos(self):
+        for i in self.items.values():
+            base_size = self.size
+            true_pos = (int(float(base_size[0]) * i.base_pos[0]), int(float(base_size[1]) * i.base_pos[1]))
+            i.pos = true_pos
+            true_size = (int(float(base_size[0]) * i.base_size[0]), int(float(base_size[1]) * i.base_size[1]))
+            i.size = true_size
+
+    def change_monster(self, monster_num):
+        self.monster.name = self.monsters['list'][monster_num]['name']
+        self.monster.img = self.monsters['list'][monster_num]['image']
+        self.monster.change_img('neutral')
+        self.monster.likes = self.monsters['list'][monster_num]['likes']
+
+    def food_pressed(self, item):
+        self.selected_item = item
+        print(item.name, item.pos, item.attributes)
+        anim = Animation(x=self.monster.pos[0] + self.monster.size[0] / 2,
+                         y=self.monster.pos[1] + self.monster.size[1] / 4,
+                         duration=1)
+        anim.bind(on_complete=self.finished_animation)
+        anim.start(item.image_id)
+
+    def finished_animation(self, *args):
+        item = args[1]
+        item.size = (1, 1)
+        self.feed_monster(self.selected_item)
+
+    def feed_monster(self, item, anim=6, dt=0):
+        if anim == 0:
+            self.check_likes(item)
+        else:
+            sequence = int(anim % len(self.monster.img['eating']))
+
+            self.monster.change_img('eating', sequence)
+            Clock.schedule_once(partial(self.feed_monster, item, anim-1), 0.5)
+
+    def check_likes(self, item):
+        # check how many attributes the monster likes
+        print(item.name)
+        likes_item = 0
+        total_likes = 0
+        for att_name, att_list in self.monster.likes.items():
+            for a in att_list:
+                total_likes += 1
+                if a in item.attributes[att_name]:
+                    likes_item += 1
+        monster_likes = float(likes_item) / float(total_likes)
+
+        # change monster image to correct one
+        if monster_likes < 0.3:
+            self.monster.change_img('bad')
+        elif monster_likes < 0.7:
+            self.monster.change_img('neutral')
+        else:
+            self.monster.change_img('good')
+
+        self.tries -= 1
+        print('tries', self.tries)
+        if self.tries == 0:
+            self.test_mosnter()
+
+    def test_mosnter(self):
+        self.the_app.test_monster(self.monster)
+
+    def next_monster(self):
+        self.tries = number_of_tries
         # set the timer of the game
         print('Starting clock...')
-        for k,v in self.items.items():
+        self.change_monster(self.current_monster)
+
+        for k, v in self.items.items():
             v.current = 1
-            v.pos = v.base_pos
+            # v.pos = v.base_pos
+        self.reset_pos()
         self.the_end = False
-        self.is_playing = False
+        Clock.schedule_once(self.meet_monster, 0.05)
 
-
-    def on_play(self, name, par):
-        self.items[name].on_play()
-        text = self.items[name].get_text()
-        if text:
-            self.show_text(text)
-
-    def on_stop(self, name, par):
-        self.items[name].on_stop()
-        self.show_text("")
-        if self.the_end:
-            self.end_game(0.5)
-
-    def show_text(self, text):
-        if len(text) > 0:
-            new_lines = None
-            if LANGUAGE == 'Hebrew':
-                new_lines = HebrewManagement.multiline(text, 45)
-            if new_lines:
-                for nl in range(0, len(new_lines)):
-                    self.the_widget.cg_lbl[nl].text = new_lines[nl]
+    def meet_monster(self, dt):
+        if '.wav' in self.monsters['list'][self.current_monster]['wav']:
+            SoundLoader.load(self.monsters['list'][self.current_monster]['wav']).play()
         else:
-            for l in self.the_widget.cg_lbl:
-                l.text = ''
+            TTS.speak(['I am ', self.monsters['list'][self.current_monster]['name'], ' and i am hungry.'])
+
+    def change_item(self, item, tool):
+        item.attributes['process'] = tool.attributes['process']
+
 
 
 class CuriosityWidget(FloatLayout):
     cg_lbl = None
+    the_game = None
 
-    def __init__(self):
+    def __init__(self, the_game=None):
         super(CuriosityWidget, self).__init__()
+        self.the_game = the_game
         with self.canvas.before:
             self.rect = Rectangle(source='')
             self.bind(size=self._update_rect, pos=self._update_rect)
-        self.cg_lbl = []
-        for k in range(0,3):
-            self.cg_lbl.append(Label(font_name='fonts/the_font.ttf', halign='right', text='',
-                            pos=(10, 10 + 75 * k), font_size='48sp', size_hint_y=0.1, color=[0,0.1,0.5,1.0]))
-            self.add_widget(self.cg_lbl[-1])
 
     def update_background(self, filename):
         with self.canvas.before:
@@ -235,3 +302,4 @@ class CuriosityWidget(FloatLayout):
     def _update_rect(self, instance, value):
         self.rect.pos = instance.pos
         self.rect.size = instance.size
+        self.the_game.update_pos_size(instance.size)

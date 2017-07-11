@@ -1,0 +1,119 @@
+{
+  "background": "big_ref.png",
+  "attributes": {
+    "type": ["fruit_vegetable", "meat_fish", "bread_sweet", "liquid"],
+    "color": ["red", "yellow_orange", "blue_purple", "green"],
+    "size": ["small", "medium", "big"]
+  },
+  "monsters" : {
+    "pos": "0.02, 0.05",
+    "size": "0.4, 0.4",
+    "list": [
+      {
+        "name": "green",
+        "wav": "",
+        "image": {
+          "neutral": "Asset 6_m.png",
+          "good": "Asset 10_m.png",
+          "bad": "Asset 8_m.png",
+          "eating": ["Asset 7_m.png", "Asset 9_m.png"]
+        },
+        "likes": {
+          "type": ["fruit_vegetable"],
+          "color": ["yellow_orange"],
+          "size": ["medium"]
+        }
+      },
+      {
+        "name": "purple",
+        "wav": "",
+        "image": {
+          "neutral": "Asset 15m.png",
+          "good": "Asset 11m.png",
+          "bad": "Asset 13m.png",
+          "eating": ["Asset 12m.png", "Asset 14m.png"]
+        },
+        "likes": {
+          "type": ["bread_sweet"],
+          "color": ["red"],
+          "size": ["small"]
+        }
+      },
+      {
+        "name": "red",
+        "wav": "",
+        "image": {
+          "neutral": "Asset 20m.png",
+          "good": "Asset 19m.png",
+          "bad": "Asset 18m.png",
+          "eating": ["Asset 16m.png", "Asset 17m.png"]
+        },
+        "likes": {
+          "type": ["fruit_vegetable", "liquid"],
+          "color": ["red", "blue_purple"],
+          "size": []
+        }
+      },
+      {
+        "name": "blue",
+        "wav": "",
+        "image": {
+          "neutral": "Asset 26m.png",
+          "good": "Asset 23m.png",
+          "bad": "Asset 24m.png",
+          "eating": ["Asset 25m.png", "Asset 22m.png"]
+        },
+        "likes": {
+          "type": ["bread_sweet"],
+          "color": ["green", "red"],
+          "size": ["big"]
+        }
+      },
+      {
+        "name": "cyan",
+        "wav": "",
+        "image": {
+          "neutral": "Asset 31m.png",
+          "good": "Asset 30m.png",
+          "bad": "Asset 29m.png",
+          "eating": ["Asset 27m.png", "Asset 28m.png"]
+        },
+        "likes": {
+          "type": ["fruit_vegetable"],
+          "color": ["blue_purple"],
+          "size": ["small"]
+        }
+      }
+    ]
+  },
+  "list": {
+    "chicken": {
+      "pos": "0.9,0.1",
+      "size": "0.1,0.1",
+      "img": {
+        "1": "Asset 42.png",
+        "2": "Asset 42.png"
+      },
+      "attributes":
+      {
+        "type": "meat_fish",
+        "color": "red",
+        "size": "medium"
+      }
+    },
+    "banana": {
+      "pos": "0.3,0.8",
+      "size": "0.2,0.2",
+      "img": {
+        "1": "Asset 36.png",
+        "2": "Asset 36.png"
+      },
+      "attributes":
+      {
+        "type": "fruit_vegetable",
+        "color": "yellow_orange",
+        "size": "small"
+      }
+    }
+  }
+}

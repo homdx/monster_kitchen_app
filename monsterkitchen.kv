@@ -2,34 +2,28 @@
 #:import kivy kivy
 #:import win kivy.core.window
 
-<Item>:
-    # each time a picture is created, the image can delay the loading
-    # as soon as the image is loaded, ensure that the center is changed
-    # to the center of the screen.
-    on_size: self.center = win.Window.center
-    size: image.size
-    size_hint: None, None
-    item_lbl:item_lbl
+<FoodWidget>:
+    image_id: image_id
+    button_id: button_id
+    FloatLayout:
+        LoggedButton:
+            id: button_id
+            on_press: root.food_pressed()
+            background_color: (0,0,0,0)
+            allow_stretch: True
+            keep_ratio: True
+            size_hint_y: None
+            size_hint_x: None
+        Image:
+            id: image_id
+            allow_stretch: True
+            keep_ratio: True
+            size_hint_y: None
+            size_hint_x: None
 
-    Image:
-        id: image
-        source: root.source
-
-        # create initial image to be 400 pixels width
-        size: 400, 400 / self.image_ratio
-
-        Label:
-            id: item_lbl
-            text: ""
-            pos: 150, -50
-            font_size: 40
-            color: (0, 0.71, 1., 1)
-            font_name: "fonts/the_font_bold.ttf"
-            bold: True
 
 <ZeroScreen>:
     start_button_pre: start_button_pre
-    start_button_post: start_button_post
     subject_id: subject_id
     name: 'zero_screen'
     Widget:
@@ -38,34 +32,128 @@
             name: 'start_button_pre'
             background_color: 1,0,1,1
             background_normal: ''
-            text: 'Start Pre'
+            text: 'לחתה'
+            font_name: "fonts/the_font_bold.ttf"
             font_size: 32
             size: root.width * 0.15, root.height * 0.15
-            pos: root.width * 0.65 - self.width * 0.5, root.height * 0.75 - self.height * 0.5
+            pos: root.width * 0.85 - self.width * 0.5, root.height * 0.75 - self.height * 0.5
             on_press: app.press_start('pre')
 
-        LoggedButton:
-            id: start_button_post
-            name: 'start_button_post'
-            background_color: 1,0,1,1
-            background_normal: ''
-            text: 'Start Post'
-            font_size: 32
-            size: root.width * 0.175, root.height * 0.15
-            pos: root.width * 0.85 - self.width * 0.5, root.height * 0.75 - self.height * 0.5
-            on_press: app.press_start('post')
-
         Label:
-            text: "Subject ID:"
+            text: "רפסמ"
+            font_size: 48
+            font_name: "fonts/the_font_bold.ttf"
             size: root.width * 0.175, root.height * 0.2
-            pos: root.width * 0.05 - self.width * 0.5, root.height * 0.75 - self.height * 0.5
+            pos: root.width * 0.15 - self.width * 0.5, root.height * 0.75 - self.height * 0.5
 
         LoggedTextInput:
             id: subject_id
             name: 'subject_id'
             text: ''
-            font_size: 36
+            font_size: 48
             size: root.width * 0.4, root.height * 0.2
-            pos: root.width * 0.35 - self.width * 0.5, root.height * 0.75 - self.height * 0.5
+            pos: root.width * 0.55 - self.width * 0.5, root.height * 0.75 - self.height * 0.5
 
+
+<TestScreen>:
+    name: 'test_screen'
+    monster_id: monster_id
+    canvas:
+#        Rectangle:
+#            pos: self.pos
+#            size: self.size
+        Color:
+            rgba: 0.,0.,0.5,0.5
+
+    BoxLayout:
+        orientation: 'horizontal'
+        GridLayout:
+            cols: 4
+            rows: 4
+            padding: 0.2
+            spacing: 0.2
+
+            BoxLayout:
+                Image:
+                    source: 'items/Asset 16_cat.png'
+                LoggedCheckBox:
+            BoxLayout:
+                Image:
+                    source: 'items/Asset 17_cat.png'
+                LoggedCheckBox:
+            BoxLayout:
+                Label:
+                    text: 'םיקותמו םימחל'
+                    font_name: "fonts/the_font.ttf"
+                LoggedCheckBox:
+            BoxLayout:
+                Label:
+                    text: 'היתש'
+                    font_name: "fonts/the_font.ttf"
+                LoggedCheckBox:
+            BoxLayout:
+                Label:
+                    text: 'םודא'
+                    font_name: "fonts/the_font.ttf"
+                LoggedCheckBox:
+            BoxLayout:
+                Label:
+                    text: 'בוהצ'
+                    font_name: "fonts/the_font.ttf"
+                LoggedCheckBox:
+            BoxLayout:
+                Label:
+                    text: 'קורי'
+                    font_name: "fonts/the_font.ttf"
+                LoggedCheckBox:
+            BoxLayout:
+                Label:
+                    text: 'לוחכ'
+                    font_name: "fonts/the_font.ttf"
+                LoggedCheckBox:
+            BoxLayout:
+                Label:
+                    text: 'ןטק'
+                    font_name: "fonts/the_font.ttf"
+                LoggedCheckBox:
+            BoxLayout:
+                Label:
+                    text: 'ינוניב'
+                    font_name: "fonts/the_font.ttf"
+                LoggedCheckBox:
+            BoxLayout:
+                Label:
+                    text: 'לודג'
+                    font_name: "fonts/the_font.ttf"
+                LoggedCheckBox:
+            BoxLayout:
+            BoxLayout:
+                Label:
+                    text: 'אנ'
+                    font_name: "fonts/the_font.ttf"
+                LoggedCheckBox:
+            BoxLayout:
+                Label:
+                    text: 'לשובמ'
+                    font_name: "fonts/the_font.ttf"
+                LoggedCheckBox:
+            BoxLayout:
+                Label:
+                    text: 'ךותח'
+                    font_name: "fonts/the_font.ttf"
+                LoggedCheckBox:
+            BoxLayout:
+                Label:
+                    text: 'ןגוטמ'
+                    font_name: "fonts/the_font.ttf"
+                LoggedCheckBox:
+        BoxLayout:
+            orientation: 'vertical'
+            Image:
+                id: monster_id
+            LoggedButton:
+                name: 'finished'
+                text: 'יתמייס'
+                font_name: "fonts/the_font.ttf"
+                on_press: app.next_monster()
 
