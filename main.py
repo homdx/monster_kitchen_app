@@ -21,10 +21,14 @@ class TestScreen(Screen):
 
 
 class IntroScreen(Screen):
+    the_app = None
 
     def on_enter(self, *args):
-        # TODO: talk
-        pass
+        TTS.speak(["this is the monsters kitchen"], self.next_screen)
+
+    def next_screen(self, *args):
+        self.the_app.sm.current = "the_game"
+
 
 class MonsterKitchenApp(App):
     game_screen = None
@@ -41,6 +45,7 @@ class MonsterKitchenApp(App):
         self.sm.add_widget(screen)
 
         screen = IntroScreen(name='intro_screen')
+        screen.the_app = self
         self.sm.add_widget(screen)
 
         screen = TestScreen()
@@ -51,9 +56,9 @@ class MonsterKitchenApp(App):
         self.game_screen.add_widget(self.game_screen.curiosity_game.the_widget)
         self.sm.add_widget(self.game_screen)
 
-        # self.sm.current = 'zero_screen'
+        self.sm.current = 'zero_screen'
         # self.sm.current = 'test_screen'
-        self.sm.current = 'intro_screen'
+        # self.sm.current = 'intro_screen'
         return self.sm
 
     def init_communication(self):

@@ -26,7 +26,7 @@ number_of_tries = 3
 class TestScreen:
 
     def on_enter(self):
-        print('here')
+        KL.log.insert(action=LogAction.data, obj='TestScreen', comment='entered')
 
 class Monster(Image):
     cg = None
@@ -51,6 +51,9 @@ class Monster(Image):
         if self.pos != true_pos and self.size != true_size:
             self.pos = true_pos
             self.size = true_size
+
+    def log(self):
+        KL.log.insert(action=LogAction.data, obj=self.name, comment=json.dumps(self.likes))
 
 
 class GameScreen(Screen):
@@ -120,7 +123,7 @@ class CuriosityGame:
         items_list = food_json.get('data')
         self.items = {}
         for name, value in items_list.items():
-            self.items[name] = FoodWidget(self) #Item()
+            self.items[name] = FoodWidget(self)
             self.items[name].name = name
 
             if 'pos' in value:
@@ -205,6 +208,7 @@ class CuriosityGame:
         self.monster.img = self.monsters['list'][monster_num]['image']
         self.monster.change_img('neutral')
         self.monster.likes = self.monsters['list'][monster_num]['likes']
+        self.monster.log()
 
     def food_pressed(self, item):
         self.selected_item = item
@@ -250,6 +254,8 @@ class CuriosityGame:
                 if a in item.attributes[att_name]:
                     likes_item += 1
         monster_likes = float(likes_item) / float(total_likes)
+        KL.log.insert(action=LogAction.data, obj=self.monster.name,
+                      comment=json.dumps(item.attributes) + ' likes ' + str(monster_likes))
 
         # change monster image to correct one
         if monster_likes < 0.3:
