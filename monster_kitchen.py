@@ -73,7 +73,7 @@ class GameScreen(Screen):
             self.curiosity_game.load(self.the_app.root.size)
             Clock.schedule_once(self.introduction, 0.1)
         elif self.current_monster >= len(self.curiosity_game.monsters['list']):
-            self.the_app.sm.current = 'zero_screen'
+            self.the_app.sm.current = 'end_screen'
         else:
             self.curiosity_game.start()
 

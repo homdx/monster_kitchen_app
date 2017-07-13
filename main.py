@@ -30,6 +30,16 @@ class IntroScreen(Screen):
         self.the_app.sm.current = "the_game"
 
 
+class EndScreen(Screen):
+    the_app = None
+
+    def on_enter(self, *args):
+        TTS.speak(["thank you for feed the monsters"], self.next_screen)
+
+    def next_screen(self, *args):
+        self.the_app.sm.current = "zero_creen"
+
+
 class MonsterKitchenApp(App):
     game_screen = None
 
@@ -48,13 +58,19 @@ class MonsterKitchenApp(App):
         screen.the_app = self
         self.sm.add_widget(screen)
 
-        screen = TestScreen()
-        self.sm.add_widget(screen)
 
         self.game_screen = GameScreen(name='the_game')
         self.game_screen.start(self)
         self.game_screen.add_widget(self.game_screen.curiosity_game.the_widget)
         self.sm.add_widget(self.game_screen)
+
+
+        screen = TestScreen()
+        self.sm.add_widget(screen)
+
+        screen = EndScreen(name='end_screen')
+        screen.the_app = self
+        self.sm.add_widget(screen)
 
         self.sm.current = 'zero_screen'
         # self.sm.current = 'test_screen'
