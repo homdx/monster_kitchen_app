@@ -71,7 +71,7 @@ class MonsterKitchenApp(App):
 
     def press_start(self, pre_post):
         self.game_screen.curiosity_game.filename = 'items.json'
-        self.sm.current = 'the_game'
+        self.sm.current = 'intro_screen'
 
     def test_monster(self, monster):
         self.sm.current = 'test_screen'

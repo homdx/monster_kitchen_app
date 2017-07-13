@@ -21,7 +21,7 @@ from copy import deepcopy
 
 LANGUAGE = 'English'  # 'Hebrew'
 items_path = 'items/'
-number_of_tries = 3
+number_of_tries = 1
 
 class TestScreen:
 
@@ -193,6 +193,7 @@ class CuriosityGame:
                 i.button_id.size = i.image_id.size
 
     def start(self):
+        self.update_pos_size(self.size)
         self.next_monster()
 
     def reset_pos(self):
