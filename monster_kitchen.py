@@ -21,7 +21,7 @@ from copy import deepcopy
 
 LANGUAGE = 'English'  # 'Hebrew'
 items_path = 'items/'
-number_of_tries = 1
+number_of_tries = 3
 
 class TestScreen:
 
@@ -210,8 +210,12 @@ class CuriosityGame:
         self.monster.change_img('neutral')
         self.monster.likes = self.monsters['list'][monster_num]['likes']
         self.monster.log()
+        self.selected_item = None
+        self.the_end = False
+        self.unlock_tablet()
 
     def food_pressed(self, item):
+        self.lock_tablet()
         self.selected_item = item
         print(item.name, item.pos, item.attributes)
         # set attributes
@@ -222,6 +226,14 @@ class CuriosityGame:
             ai.image_id.source = the_source
 
         Clock.schedule_once(self.food_animation, 0.1)
+
+    def lock_tablet(self):
+        for w in self.the_widget.children:
+            w.disabled = True
+
+    def unlock_tablet(self):
+        for w in self.the_widget.children:
+            w.disabled = False
 
     def food_animation(self, dt):
         anim = Animation(x=self.monster.pos[0] + self.monster.size[0] / 2,
@@ -270,6 +282,9 @@ class CuriosityGame:
         print('tries', self.tries)
         if self.tries == 0:
             Clock.schedule_once(self.test_monster, 2)
+            return
+        self.selected_item = None
+        self.unlock_tablet()
 
     def test_monster(self, dt):
         self.the_app.test_monster(self.monster)
