@@ -1,10 +1,10 @@
 [app]
 
 # (str) Title of your application
-title = Free Exploration
+title = Monster Kitchen
 
 # (str) Package name
-package.name = FreeExplorationApp
+package.name = MonsterKitchen
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = com.gorengordon.curiosity
