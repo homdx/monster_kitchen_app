@@ -5,29 +5,42 @@ from monster_kitchen import *
 from kivy_communication import *
 from kivy.uix.screenmanager import ScreenManager, Screen
 from text_handling import *
-
+from test_screen import *
 
 class ZeroScreen(Screen):
 
     def on_enter(self, *args):
         KL.restart()
 
-
-class TestScreen(Screen):
-
-    def on_enter(self, *args):
-        # TODO: clear all marked buttons
-        pass
+    def start(self):
+        self.ids['subject_id'].bind(text=self.ids['subject_id'].on_text_change)
 
 
 class IntroScreen(Screen):
     the_app = None
 
     def on_enter(self, *args):
-        TTS.speak(["this is the monsters kitchen"], self.next_screen)
+        self.introduction = [
+                            "Intro_1_Welcome.wav",
+                            "Intro_2_Monsters_are_coming.wav",
+                            "Intro_3_Categories.wav",
+                            "Intro_4_Mission.wav",
+                            "Intro_5_How.wav",
+                            "Intro_6_after.wav",
+                            "Intro_7_bonappetit.wav"
+                        ]
+        self.intro_counter = 0
+        self.play_next()
 
-    def next_screen(self, *args):
-        self.the_app.sm.current = "the_game"
+    def play_next(self, *args):
+        if self.intro_counter < len(self.introduction):
+            wav_filename = 'items/sounds/' + self.introduction[self.intro_counter]
+            sl = SoundLoader.load(wav_filename)
+            sl.bind(on_stop=self.play_next)
+            self.intro_counter += 1
+            sl.play()
+        else:
+            self.the_app.sm.current = "the_game"
 
 
 class EndScreen(Screen):
@@ -37,7 +50,7 @@ class EndScreen(Screen):
         TTS.speak(["thank you for feed the monsters"], self.next_screen)
 
     def next_screen(self, *args):
-        self.the_app.sm.current = "zero_creen"
+        self.the_app.sm.current = "zero_screen"
 
 
 class MonsterKitchenApp(App):
@@ -51,6 +64,7 @@ class MonsterKitchenApp(App):
         self.sm = ScreenManager()
 
         screen = ZeroScreen()
+        screen.start()
         screen.ids['subject_id'].bind(text=screen.ids['subject_id'].on_text_change)
         self.sm.add_widget(screen)
 
@@ -87,7 +101,8 @@ class MonsterKitchenApp(App):
 
     def press_start(self, pre_post):
         self.game_screen.curiosity_game.filename = 'items.json'
-        self.sm.current = 'intro_screen'
+        #self.sm.current = 'intro_screen'
+        self.sm.current = 'the_game'
 
     def test_monster(self, monster):
         self.sm.current = 'test_screen'

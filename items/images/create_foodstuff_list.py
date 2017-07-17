@@ -18,7 +18,7 @@ for stuff in food:
                     1.0 - float(pos[1]) / float(background_size[1])],
             'size': [float(size[0]) / float(background_size[0]),
                     float(size[1]) / float(background_size[1])],
-            'attributes': [stuff[6], stuff[7], stuff[8]]
+            'attributes': [stuff[9], stuff[10], stuff[11]]
         }
 print(food_dict)
 json.dump(food_dict, open('../food.json', 'w'))

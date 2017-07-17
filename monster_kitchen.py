@@ -21,7 +21,7 @@ from copy import deepcopy
 
 LANGUAGE = 'English'  # 'Hebrew'
 items_path = 'items/'
-number_of_tries = 3
+number_of_tries = 1
 
 class TestScreen:
 
@@ -73,24 +73,20 @@ class GameScreen(Screen):
             self.curiosity_game.load(self.the_app.root.size)
             Clock.schedule_once(self.introduction, 0.1)
         elif self.current_monster >= len(self.curiosity_game.monsters['list']):
-            self.the_app.sm.current = 'end_screen'
+            self.end_game()
         else:
             self.curiosity_game.start()
 
     def introduction(self, dt):
-        # TTS.speak('This is the monsters kitchen. Each monster likes different things.')
-        # TTS.speak('But each monster has favorite tastes.')
-        # TTS.speak('Some like red things and red fruits the most.')
-        # TTS.speak('Other may like boiled things, but boiled cakes most of all.')
-        # TTS.speak('Your goal is to find what are each mosnters tastes.')
-        # TTS.speak('Fro each monster you can try ten things.')
-        # TTS.speak('In order to try, pick food from the fridge, choose whether to serve it raw, or cut, boil or fry it, before giving it to the mosnter.')
-        # TTS.speak('The mosnter will let you know if it likes what you gave it.')
-        # TTS.speak('In the end you will be asked whether you figured out the monsters tastes.')
-        TTS.speak(['Bon apetite.'])
         self.curiosity_game.start()
 
-    def end_game(self, dt):
+    def end_game(self):
+        wav_filename = 'items/sounds/the_end.wav'
+        sl = SoundLoader.load(wav_filename)
+        sl.bind(on_stop=self.next_subject)
+        sl.play()
+
+    def next_subject(self, *args):
         self.the_app.sm.current = 'zero_screen'
 
 
@@ -116,6 +112,7 @@ class CuriosityGame:
         self.size = size
         items_json = JsonStore(items_path + self.filename)
         self.the_widget.update_background(items_path + items_json.get('background'))
+        self.test = items_json.get('test')
 
         # initialize items
         food_json = JsonStore(items_path + 'food.json')
@@ -151,11 +148,11 @@ class CuriosityGame:
             'color': FoodWidget(self),
             'size': FoodWidget(self),
         }
-
+        descriptors = ['color', 'type', 'size']
         for i, ai in enumerate(self.attribute_images.values()):
-            ai.base_pos = (0.05 + 0.1 * i, 0.85)
-            ai.base_size = (0.1, 0.1)
-            ai.image_id.source = 'items/red.png'
+            ai.base_pos = (0.01 + 0.1 * i, 0.80)
+            ai.base_size = (0.15, 0.15)
+            ai.image_id.source = 'items/' + descriptors[i] + '.png'
             ai.disabled = True
 
         # set widgets
@@ -195,6 +192,7 @@ class CuriosityGame:
     def start(self):
         self.update_pos_size(self.size)
         self.next_monster()
+
 
     def reset_pos(self):
         for i in self.items.values():
@@ -272,11 +270,11 @@ class CuriosityGame:
 
         # change monster image to correct one
         if monster_likes < 0.3:
-            self.monster.change_img('bad')
+            self.food_bad()
         elif monster_likes < 0.7:
-            self.monster.change_img('neutral')
+            self.food_ok()
         else:
-            self.monster.change_img('good')
+            self.food_tasty()
 
         self.tries -= 1
         print('tries', self.tries)
@@ -285,6 +283,24 @@ class CuriosityGame:
             return
         self.selected_item = None
         self.unlock_tablet()
+
+    def food_tasty(self):
+        self.monster.change_img('good')
+        if self.monsters['list'][self.current_monster]['wav'] is not '':
+            wav_filename = 'items/sounds/' + self.monsters['list'][self.current_monster]['wav'] + '_2_tasty.wav'
+            SoundLoader.load(wav_filename).play()
+
+    def food_ok(self):
+        self.monster.change_img('neutral')
+        if self.monsters['list'][self.current_monster]['wav'] is not '':
+            wav_filename = 'items/sounds/' + self.monsters['list'][self.current_monster]['wav'] + '_3_ok.wav'
+            SoundLoader.load(wav_filename).play()
+
+    def food_bad(self):
+        self.monster.change_img('bad')
+        if self.monsters['list'][self.current_monster]['wav'] is not '':
+            wav_filename = 'items/sounds/' + self.monsters['list'][self.current_monster]['wav'] + '_4_bad.wav'
+            SoundLoader.load(wav_filename).play()
 
     def test_monster(self, dt):
         self.the_app.test_monster(self.monster)
@@ -303,8 +319,9 @@ class CuriosityGame:
         Clock.schedule_once(self.meet_monster, 0.05)
 
     def meet_monster(self, dt):
-        if '.wav' in self.monsters['list'][self.current_monster]['wav']:
-            SoundLoader.load(self.monsters['list'][self.current_monster]['wav']).play()
+        if self.monsters['list'][self.current_monster]['wav'] is not '':
+            wav_filename = 'items/sounds/' + self.monsters['list'][self.current_monster]['wav'] + '_1_opening.wav'
+            SoundLoader.load(wav_filename).play()
         else:
             TTS.speak(['I am ', self.monsters['list'][self.current_monster]['name'], ' and i am hungry.'])
 

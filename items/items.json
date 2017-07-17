@@ -5,13 +5,17 @@
     "color": ["red", "yellow_orange", "blue_purple", "green"],
     "size": ["small", "medium", "big"]
   },
+  "test" : [
+    "categories_1_what.wav",
+    "categories_2_choose.wav"
+  ],
   "monsters" : {
     "pos": "0.02, 0.05",
     "size": "0.4, 0.4",
     "list": [
       {
         "name": "green",
-        "wav": "",
+        "wav": "monster1",
         "image": {
           "neutral": "Asset 6_m.png",
           "good": "Asset 10_m.png",
@@ -26,7 +30,7 @@
       },
       {
         "name": "purple",
-        "wav": "",
+        "wav": "monster2",
         "image": {
           "neutral": "Asset 15m.png",
           "good": "Asset 11m.png",
@@ -41,7 +45,7 @@
       },
       {
         "name": "red",
-        "wav": "",
+        "wav": "monster3",
         "image": {
           "neutral": "Asset 20m.png",
           "good": "Asset 19m.png",
@@ -56,7 +60,7 @@
       },
       {
         "name": "blue",
-        "wav": "",
+        "wav": "monster4",
         "image": {
           "neutral": "Asset 26m.png",
           "good": "Asset 23m.png",
@@ -71,7 +75,7 @@
       },
       {
         "name": "cyan",
-        "wav": "",
+        "wav": "monster5",
         "image": {
           "neutral": "Asset 31m.png",
           "good": "Asset 30m.png",

@@ -21,6 +21,25 @@
             size_hint_y: None
             size_hint_x: None
 
+<CategoryWidget>:
+    image_id: image_id
+    button_id: button_id
+    FloatLayout:
+        LoggedButton:
+            id: button_id
+            on_press: root.category_pressed()
+            background_color: (0,0,0,0)
+            allow_stretch: True
+            keep_ratio: True
+            size_hint_y: None
+            size_hint_x: None
+        Image:
+            id: image_id
+            allow_stretch: True
+            keep_ratio: True
+            size_hint_y: None
+            size_hint_x: None
+
 <ZeroScreen>:
     start_button_pre: start_button_pre
     subject_id: subject_id
@@ -73,15 +92,16 @@
 <TestScreen>:
     name: 'test_screen'
     monster_id: monster_id
+    the_widget: the_widget
 
-    BoxLayout:
+    Widget:
+        id: the_widget
         canvas.before:
-            Color:
-                rgba: 0.3, 0.3, 0.9, 0.5
             Rectangle:
-                # self here refers to the widget i.e BoxLayout
                 pos: self.pos
                 size: self.size
+                source: 'items/finish_screen.png'
+
         orientation: 'horizontal'
         GridLayout:
             cols: 4
@@ -142,7 +162,6 @@
                 id: monster_id
             LoggedButton:
                 name: 'finished'
-                text: 'יתמייס'
-                font_name: "fonts/the_font.ttf"
                 on_press: app.next_monster()
+                background_color: (0,0,0,0)
 
