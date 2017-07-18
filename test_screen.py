@@ -17,25 +17,25 @@ class TestScreen(Screen):
             for i, att in enumerate(attributes[att_type]):
                 cw = CategoryWidget()
                 cw.image_id.source = 'items/' + att + '.png'
-                cw.pos = (0.05 + i * 0.15, 0.8 - at_i * 0.3)
-                cw.size = (0.15, 0.15)
-                cw.image_id.pos = cw.pos
-                cw.image_id.size = cw.size
-                cw.button_id.pos = cw.pos
-                cw.button_id.size = cw.size
+                cw.base_pos = (0.05 + i * 0.15, 0.8 - at_i * 0.3)
+                cw.base_size = (0.15, 0.15)
+                cw.image_id.base_pos = cw.base_pos
+                cw.image_id.base_size = cw.base_size
+                cw.button_id.base_pos = cw.base_pos
+                cw.button_id.base_size = cw.base_size
                 cw.button_id.name = att_type + ',' + att
                 cw.button_id.bind(on_press=self.att_pressed)
                 self.the_widget.add_widget(cw)
 
         done_button = CategoryWidget()
         done_button.image_id.source = ''
-        done_button.pos = (0.6, 0.0)
-        done_button.size = (0.4, 0.4)
+        done_button.base_pos = (0.6, 0.0)
+        done_button.base_size = (0.4, 0.4)
         done_button.image_id.color = (0,0,0,0)
-        done_button.image_id.pos = done_button.pos
-        done_button.image_id.size = done_button.size
-        done_button.button_id.pos = done_button.pos
-        done_button.button_id.size = done_button.size
+        done_button.image_id.base_pos = done_button.base_pos
+        done_button.image_id.base_size = done_button.base_size
+        done_button.button_id.base_pos = done_button.base_pos
+        done_button.button_id.base_size = done_button.base_size
         done_button.button_id.name = 'done_button'
         done_button.button_id.bind(on_press=self.the_app.next_monster)
         self.the_widget.add_widget(done_button)
@@ -58,8 +58,8 @@ class TestScreen(Screen):
             for cw in self.the_widget.children:
                 try:
                     if cw.image_id is None: pass
-                    cw.pos = (cw.pos[0] * instance.size[0], cw.pos[1] * instance.size[1])
-                    cw.size = (cw.size[0] * instance.size[0], cw.size[1] * instance.size[1])
+                    cw.pos = (cw.base_pos[0] * instance.size[0], cw.base_pos[1] * instance.size[1])
+                    cw.size = (cw.base_size[0] * instance.size[0], cw.base_size[1] * instance.size[1])
                     cw.image_id.pos = cw.pos
                     cw.image_id.size = cw.size
                     cw.button_id.pos = cw.pos
