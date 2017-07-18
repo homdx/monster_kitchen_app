@@ -73,7 +73,6 @@ class MonsterKitchenApp(App):
         screen.the_app = self
         self.sm.add_widget(screen)
 
-
         self.game_screen = GameScreen(name='the_game')
         self.game_screen.start(self)
         self.game_screen.add_widget(self.game_screen.curiosity_game.the_widget)
@@ -87,8 +86,8 @@ class MonsterKitchenApp(App):
         screen.the_app = self
         self.sm.add_widget(screen)
 
-        # self.sm.current = 'zero_screen'
-        self.sm.current = 'test_screen'
+        self.sm.current = 'zero_screen'
+        # self.sm.current = 'test_screen'
         # self.sm.current = 'intro_screen'
         return self.sm
 
@@ -102,8 +101,7 @@ class MonsterKitchenApp(App):
 
     def press_start(self, pre_post):
         self.game_screen.curiosity_game.filename = 'items.json'
-        #self.sm.current = 'intro_screen'
-        self.sm.current = 'the_game'
+        self.sm.current = 'intro_screen'
 
     def test_monster(self, monster):
         self.sm.current = 'test_screen'
