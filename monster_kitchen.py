@@ -23,10 +23,6 @@ LANGUAGE = 'English'  # 'Hebrew'
 items_path = 'items/'
 number_of_tries = 1
 
-class TestScreen:
-
-    def on_enter(self):
-        KL.log.insert(action=LogAction.data, obj='TestScreen', comment='entered')
 
 class Monster(Image):
     cg = None

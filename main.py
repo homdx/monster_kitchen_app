@@ -80,6 +80,7 @@ class MonsterKitchenApp(App):
 
         screen = TestScreen()
         screen.the_app = self
+        screen.start()
         self.sm.add_widget(screen)
 
         screen = EndScreen(name='end_screen')
@@ -89,6 +90,7 @@ class MonsterKitchenApp(App):
         self.sm.current = 'zero_screen'
         # self.sm.current = 'test_screen'
         # self.sm.current = 'intro_screen'
+        # self.sm.current = 'the_game'
         return self.sm
 
     def init_communication(self):
@@ -105,7 +107,7 @@ class MonsterKitchenApp(App):
 
     def test_monster(self, monster):
         self.sm.current = 'test_screen'
-        self.sm.current_screen.monster_id.source = items_path + monster.img['neutral']
+        self.sm.current_screen.monster.source = items_path + monster.img['neutral']
 
     def next_monster(self, *args):
         self.sm.current = 'the_game'

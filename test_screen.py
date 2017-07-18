@@ -1,12 +1,14 @@
 from kivy.uix.screenmanager import Screen
+from kivy.uix.image import Image
 from category_widget import *
 import json
 
 
 class TestScreen(Screen):
     the_app = None
+    monster = None
 
-    def on_enter(self, *args):
+    def start(self):
         with self.canvas.before:
             self.bind(size=self.update_pos, pos=self.update_pos)
         self.the_widget = self.ids['the_widget']
@@ -31,7 +33,7 @@ class TestScreen(Screen):
         done_button.image_id.source = ''
         done_button.base_pos = (0.6, 0.0)
         done_button.base_size = (0.4, 0.4)
-        done_button.image_id.color = (0,0,0,0)
+        done_button.image_id.color = (0, 0, 0, 0)
         done_button.image_id.base_pos = done_button.base_pos
         done_button.image_id.base_size = done_button.base_size
         done_button.button_id.base_pos = done_button.base_pos
@@ -40,6 +42,13 @@ class TestScreen(Screen):
         done_button.button_id.bind(on_press=self.the_app.next_monster)
         self.the_widget.add_widget(done_button)
 
+        self.monster = Image()
+        self.monster.base_pos = (0.6, 0.5)
+        self.monster.base_size = (0.4, 0.4)
+        self.the_widget.add_widget(self.monster)
+
+    def on_enter(self, *args):
+        KL.log.insert(action=LogAction.data, obj='TestScreen', comment='entered')
         self.update_pos(instance=self, value=None)
 
     def att_pressed(self, *args):
@@ -66,3 +75,7 @@ class TestScreen(Screen):
                     cw.button_id.size = cw.size
                 except:
                     pass
+            self.monster.pos = (self.monster.base_pos[0] * instance.size[0],
+                                self.monster.base_pos[1] * instance.size[1])
+            self.monster.size = (self.monster.base_size[0] * instance.size[0],
+                                 self.monster.base_size[1] * instance.size[1])
