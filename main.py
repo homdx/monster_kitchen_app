@@ -11,6 +11,7 @@ class ZeroScreen(Screen):
 
     def on_enter(self, *args):
         KL.restart()
+        KL.log.insert(action=LogAction.data, obj='subject', comment='the_end', sync=True)
 
     def start(self):
         self.ids['subject_id'].bind(text=self.ids['subject_id'].on_text_change)
@@ -78,16 +79,16 @@ class MonsterKitchenApp(App):
         self.game_screen.add_widget(self.game_screen.curiosity_game.the_widget)
         self.sm.add_widget(self.game_screen)
 
-
         screen = TestScreen()
+        screen.the_app = self
         self.sm.add_widget(screen)
 
         screen = EndScreen(name='end_screen')
         screen.the_app = self
         self.sm.add_widget(screen)
 
-        self.sm.current = 'zero_screen'
-        # self.sm.current = 'test_screen'
+        # self.sm.current = 'zero_screen'
+        self.sm.current = 'test_screen'
         # self.sm.current = 'intro_screen'
         return self.sm
 
@@ -108,8 +109,11 @@ class MonsterKitchenApp(App):
         self.sm.current = 'test_screen'
         self.sm.current_screen.monster_id.source = items_path + monster.img['neutral']
 
-    def next_monster(self):
+    def next_monster(self, *args):
         self.sm.current = 'the_game'
+
+    def on_stop(self):
+        KL.log.insert(action=LogAction.data, obj='game', comment='the_end', sync=True)
 
 
 if __name__ == '__main__':

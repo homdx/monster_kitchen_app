@@ -91,7 +91,6 @@
 
 <TestScreen>:
     name: 'test_screen'
-    monster_id: monster_id
     the_widget: the_widget
 
     Widget:
@@ -101,67 +100,3 @@
                 pos: self.pos
                 size: self.size
                 source: 'items/finish_screen.png'
-
-        orientation: 'horizontal'
-        GridLayout:
-            cols: 4
-            rows: 4
-            padding: 0.2
-            spacing: 0.2
-
-            BoxLayout:
-                Image:
-                    source: 'items/fruit_vegetable.png'
-                LoggedCheckBox:
-            BoxLayout:
-                Image:
-                    source: 'items/meat_fish.png'
-                LoggedCheckBox:
-            BoxLayout:
-                Image:
-                    source: 'items/bread_sweet.png'
-                LoggedCheckBox:
-            BoxLayout:
-                Image:
-                    source: 'items/liquid.png'
-                LoggedCheckBox:
-            BoxLayout:
-                Image:
-                    source: 'items/red.png'
-                LoggedCheckBox:
-            BoxLayout:
-                Image:
-                    source: 'items/yellow_orange.png'
-                LoggedCheckBox:
-            BoxLayout:
-                Image:
-                    source: 'items/blue_purple.png'
-                LoggedCheckBox:
-            BoxLayout:
-                Image:
-                    source: 'items/green.png'
-                LoggedCheckBox:
-            BoxLayout:
-                Image:
-                    source: 'items/small.png'
-                LoggedCheckBox:
-            BoxLayout:
-                Image:
-                    source: 'items/medium.png'
-                LoggedCheckBox:
-            BoxLayout:
-                LoggedCheckBox:
-                    background_normal: 'items/big.png'
-                #Image:
-                #    source: 'items/big.png'
-                #LoggedCheckBox:
-            BoxLayout:
-        BoxLayout:
-            orientation: 'vertical'
-            Image:
-                id: monster_id
-            LoggedButton:
-                name: 'finished'
-                on_press: app.next_monster()
-                background_color: (0,0,0,0)
-
