@@ -90,7 +90,7 @@ class MonsterKitchenApp(App):
         self.sm.current = 'zero_screen'
         # self.sm.current = 'test_screen'
         # self.sm.current = 'intro_screen'
-        self.sm.current = 'the_game'
+        # self.sm.current = 'the_game'
         return self.sm
 
     def init_communication(self):
