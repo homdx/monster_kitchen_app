@@ -77,6 +77,7 @@ class GameScreen(Screen):
         self.curiosity_game.start()
 
     def end_game(self):
+        KL.log.insert(action=LogAction.data, obj='game', comment='the_end', sync=True)
         wav_filename = 'items/sounds/the_end.wav'
         sl = SoundLoader.load(wav_filename)
         sl.bind(on_stop=self.next_subject)
