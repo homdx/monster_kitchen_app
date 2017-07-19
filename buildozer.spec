@@ -1,7 +1,7 @@
 [app]
 
 # (str) Title of your application
-title = Monster Kitchen
+title = Game 4
 
 # (str) Package name
 package.name = MonsterKitchen
