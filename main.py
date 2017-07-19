@@ -117,4 +117,5 @@ class MonsterKitchenApp(App):
 
 
 if __name__ == '__main__':
+    print('it is working')
     MonsterKitchenApp().run()
