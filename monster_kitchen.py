@@ -83,7 +83,8 @@ class GameScreen(Screen):
         sl.play()
 
     def next_subject(self, *args):
-        self.the_app.sm.current = 'zero_screen'
+        self.the_app.stop()
+        # self.the_app.sm.current = 'zero_screen'
 
 
 class CuriosityGame:
