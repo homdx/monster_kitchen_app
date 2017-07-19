@@ -1,5 +1,6 @@
 from kivy.uix.screenmanager import Screen
 from kivy.uix.image import Image
+from kivy.core.audio import SoundLoader
 from category_widget import *
 import json
 
@@ -50,6 +51,28 @@ class TestScreen(Screen):
     def on_enter(self, *args):
         KL.log.insert(action=LogAction.data, obj='TestScreen', comment='entered')
         self.update_pos(instance=self, value=None)
+        for cw in self.the_widget.children:
+            try:
+                if cw.image_id is None: pass
+                if cw.button_id.name is None: pass
+                if 'done' not in cw.button_id.name:
+                    cw.button_id.value = False
+                    cw.image_id.source = 'items/' + cw.button_id.name.split(',')[1] + '.png'
+            except:
+                pass
+
+        self.speak_1()
+
+    def speak_1(self):
+        wav_filename = 'items/sounds/categories_1_what.wav'
+        sl = SoundLoader.load(wav_filename)
+        sl.bind(on_stop=self.speak_2)
+        sl.play()
+
+    def speak_2(self, *args):
+        wav_filename = 'items/sounds/categories_2_choose.wav'
+        sl = SoundLoader.load(wav_filename)
+        sl.play()
 
     def att_pressed(self, *args):
         the_button = args[0]
