@@ -3,6 +3,8 @@ from kivy.uix.image import Image
 from kivy.core.audio import SoundLoader
 from category_widget import *
 import json
+from monster_widget import MonsterWidget
+
 
 
 class TestScreen(Screen):
@@ -40,13 +42,18 @@ class TestScreen(Screen):
         done_button.button_id.base_pos = done_button.base_pos
         done_button.button_id.base_size = done_button.base_size
         done_button.button_id.name = 'done_button'
-        done_button.button_id.bind(on_press=self.the_app.next_monster)
+        done_button.button_id.bind(on_press=self.press_finish)
         self.the_widget.add_widget(done_button)
 
-        self.monster = Image()
+        self.monster = MonsterWidget()
         self.monster.base_pos = (0.6, 0.5)
         self.monster.base_size = (0.4, 0.4)
         self.the_widget.add_widget(self.monster)
+
+    def update_monster(self, monster):
+        monster.change_img()
+        self.monster.image_id.source = monster.image_id.source
+        self.monster.likes = monster.likes
 
     def on_enter(self, *args):
         KL.log.insert(action=LogAction.data, obj='TestScreen', comment='entered')
@@ -74,6 +81,12 @@ class TestScreen(Screen):
         sl = SoundLoader.load(wav_filename)
         sl.play()
 
+    def speak_3(self, *args):
+        wav_filename = 'items/sounds/categories_1_what.wav'
+        sl = SoundLoader.load(wav_filename)
+        sl.bind(on_stop=self.end_screen)
+        sl.play()
+
     def att_pressed(self, *args):
         the_button = args[0]
         the_button.value = not the_button.value
@@ -98,7 +111,23 @@ class TestScreen(Screen):
                     cw.button_id.size = cw.size
                 except:
                     pass
-            self.monster.pos = (self.monster.base_pos[0] * instance.size[0],
-                                self.monster.base_pos[1] * instance.size[1])
-            self.monster.size = (self.monster.base_size[0] * instance.size[0],
-                                 self.monster.base_size[1] * instance.size[1])
+
+    def press_finish(self, *args):
+        self.show_answer()
+        self.speak_3()
+
+    def end_screen(self, *args):
+        self.the_app.next_monster()
+
+    def show_answer(self):
+        for likes_cat, likes_atts in self.monster.likes.items():
+            for likes_att in likes_atts:
+                for cw in self.the_widget.children:
+                    try:
+                        if cw.image_id is None: pass
+                        if cw.button_id.name is None: pass
+                        if 'done' not in cw.button_id.name:
+                            if likes_cat in cw.button_id.name and likes_att in cw.button_id.name:
+                                cw.image_id.color = (0.5, 0.8, 0.7, 0.5)
+                    except:
+                        pass

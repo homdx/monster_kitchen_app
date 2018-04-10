@@ -30,12 +30,15 @@ class MonsterWidget(WidgetLogger):
         true_size = (int(float(base_size[0]) * self.base_size[0]), int(float(base_size[1]) * self.base_size[1]))
 
         if self.pos != true_pos and self.size != true_size:
-            self.pos = true_pos
-            self.size = true_size
-            self.image_id.pos = true_pos
-            self.image_id.size = true_size
-            self.button_id.pos = true_pos
-            self.button_id.size = true_size
+            self.change_pos(true_pos, true_size)
+
+    def change_pos(self, true_pos, true_size):
+        self.pos = true_pos
+        self.size = true_size
+        self.image_id.pos = true_pos
+        self.image_id.size = true_size
+        self.button_id.pos = true_pos
+        self.button_id.size = true_size
 
     def log(self):
         KL.log.insert(action=LogAction.data, obj=self.name, comment=json.dumps(self.likes))
