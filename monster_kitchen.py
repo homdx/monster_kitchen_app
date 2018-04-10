@@ -15,6 +15,7 @@ from kivy.core.audio import SoundLoader
 from kivy.uix.image import Image
 from kivy.animation import Animation
 from food_widget import FoodWidget
+from monster_widget import MonsterWidget
 
 from functools import partial
 from copy import deepcopy
@@ -24,32 +25,32 @@ items_path = 'items/'
 number_of_tries = 7
 
 
-class Monster(Image):
-    cg = None
-    base_pos = None
-    base_size = None
-    likes = None
-    name = ''
-    img = None
-
-    def change_img(self, im='neutral', sequence=0):
-        if im in self.img:
-            if im == 'eating':
-                self.source = items_path + self.img[im][sequence]
-            else:
-                self.source = items_path + self.img[im]
-
-    def on_size(self, *args):
-        base_size = self.cg.size
-        true_pos = (int(float(base_size[0]) * self.base_pos[0]), int(float(base_size[1]) * self.base_pos[1]))
-        true_size = (int(float(base_size[0]) * self.base_size[0]), int(float(base_size[1]) * self.base_size[1]))
-
-        if self.pos != true_pos and self.size != true_size:
-            self.pos = true_pos
-            self.size = true_size
-
-    def log(self):
-        KL.log.insert(action=LogAction.data, obj=self.name, comment=json.dumps(self.likes))
+# class Monster(Image):
+#     cg = None
+#     base_pos = None
+#     base_size = None
+#     likes = None
+#     name = ''
+#     img = None
+#
+#     def change_img(self, im='neutral', sequence=0):
+#         if im in self.img:
+#             if im == 'eating':
+#                 self.source = items_path + self.img[im][sequence]
+#             else:
+#                 self.source = items_path + self.img[im]
+#
+#     def on_size(self, *args):
+#         base_size = self.cg.size
+#         true_pos = (int(float(base_size[0]) * self.base_pos[0]), int(float(base_size[1]) * self.base_pos[1]))
+#         true_size = (int(float(base_size[0]) * self.base_size[0]), int(float(base_size[1]) * self.base_size[1]))
+#
+#         if self.pos != true_pos and self.size != true_size:
+#             self.pos = true_pos
+#             self.size = true_size
+#
+#     def log(self):
+#         KL.log.insert(action=LogAction.data, obj=self.name, comment=json.dumps(self.likes))
 
 
 class GameScreen(Screen):
@@ -135,11 +136,13 @@ class CuriosityGame:
                 }
 
         self.monsters = items_json.get('monsters')
-        self.monster = Monster()
+        self.monster = MonsterWidget()
+        self.monster.items_path = items_path
         self.monster.cg = self
         self.monster.base_pos = [float(x) for x in self.monsters['pos'].split(',')]
         self.monster.base_size = [float(x) for x in self.monsters['size'].split(',')]
         self.change_monster(self.current_monster)
+
 
         self.attribute_images = {
             'type': FoodWidget(self),
@@ -211,7 +214,6 @@ class CuriosityGame:
         self.unlock_tablet()
 
     def food_pressed(self, item):
-        self.lock_tablet()
         self.selected_item = item
         print(item.name, item.pos, item.attributes)
         # set attributes
@@ -221,7 +223,10 @@ class CuriosityGame:
             ai.color = (1, 1, 1, 1)
             ai.image_id.source = the_source
 
-        Clock.schedule_once(self.food_animation, 0.1)
+    def monster_pressed(self):
+        if self.selected_item:
+            self.lock_tablet()
+            Clock.schedule_once(self.food_animation, 0.1)
 
     def lock_tablet(self):
         for w in self.the_widget.children:
