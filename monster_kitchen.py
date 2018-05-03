@@ -22,35 +22,7 @@ from copy import deepcopy
 
 LANGUAGE = 'English'  # 'Hebrew'
 items_path = 'items/'
-number_of_tries = 1
-
-
-# class Monster(Image):
-#     cg = None
-#     base_pos = None
-#     base_size = None
-#     likes = None
-#     name = ''
-#     img = None
-#
-#     def change_img(self, im='neutral', sequence=0):
-#         if im in self.img:
-#             if im == 'eating':
-#                 self.source = items_path + self.img[im][sequence]
-#             else:
-#                 self.source = items_path + self.img[im]
-#
-#     def on_size(self, *args):
-#         base_size = self.cg.size
-#         true_pos = (int(float(base_size[0]) * self.base_pos[0]), int(float(base_size[1]) * self.base_pos[1]))
-#         true_size = (int(float(base_size[0]) * self.base_size[0]), int(float(base_size[1]) * self.base_size[1]))
-#
-#         if self.pos != true_pos and self.size != true_size:
-#             self.pos = true_pos
-#             self.size = true_size
-#
-#     def log(self):
-#         KL.log.insert(action=LogAction.data, obj=self.name, comment=json.dumps(self.likes))
+number_of_tries = 6
 
 
 class GameScreen(Screen):
@@ -269,7 +241,8 @@ class CuriosityGame:
                     likes_item += 1
         monster_likes = float(likes_item) / float(total_likes)
         KL.log.insert(action=LogAction.data, obj=self.monster.name,
-                      comment=json.dumps(item.attributes) + ' likes ' + str(monster_likes))
+                      comment=json.dumps(item.attributes) + ' likes ' + str(monster_likes),
+                      sync=True)
 
         # change monster image to correct one
         if monster_likes < 0.3:

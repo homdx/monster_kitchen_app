@@ -112,7 +112,19 @@ class TestScreen(Screen):
                 except:
                     pass
 
+    def log_answer(self):
+        selected_att = []
+        for cw in self.the_widget.children:
+            if type(cw) == CategoryWidget:
+                if cw.button_id.value:
+                    selected_att.append(cw.button_id.name)
+        KL.log.insert(action=LogAction.data, obj=self.name, comment='selected_atttributes' + str(selected_att),
+                      sync=True)
+        KL.log.insert(action=LogAction.data, obj=self.name, comment='correct_atttributes' + str(self.monster.likes),
+                      sync=True)
+
     def press_finish(self, *args):
+        self.log_answer()
         self.show_answer()
         self.speak_3()
 
