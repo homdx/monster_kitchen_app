@@ -83,6 +83,7 @@ class CuriosityGame:
         self.the_app = the_app
 
         self.time_first = None
+        self.selected_item = None
 
     def load(self, size=None):
         self.size = size
@@ -193,7 +194,10 @@ class CuriosityGame:
         self.unlock_tablet()
 
     def food_pressed(self, item):
+        if self.selected_item:
+            self.selected_item.opacity = 1.0
         self.selected_item = item
+        self.selected_item.opacity = 0.5
         print(item.name, item.pos, item.attributes)
         # set attributes
         for a_name, a in item.attributes.items():
@@ -204,6 +208,7 @@ class CuriosityGame:
 
     def monster_pressed(self):
         if self.selected_item:
+            self.selected_item.opacity = 1.0
             self.lock_tablet()
             Clock.schedule_once(self.food_animation, 0.1)
 

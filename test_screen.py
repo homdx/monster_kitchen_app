@@ -15,19 +15,18 @@ class TestScreen(Screen):
     def play_next(self, *args):
         if self.intro_counter < len(self.introduction):
             wav_filename = sounds_path + self.introduction[self.intro_counter]
+            print(wav_filename)
             sl = SoundLoader.load(wav_filename)
             sl.bind(on_stop=self.play_next)
             self.intro_counter += 1
             sl.play()
-        else:
-            self.the_app.sm.current = "the_game"
 
     def start(self):
         self.introduction = [
                         "Intro_3_Categories.wav",
                         "Intro_4_Mission.wav",
-                        "categories_1_what",
-                        "categories_2_choose"
+                        "categories_1_what.wav",
+                        "categories_2_choose.wav"
             ]
 
         self.intro_counter = 0
