@@ -4,14 +4,34 @@ from kivy.core.audio import SoundLoader
 from category_widget import *
 import json
 from monster_widget import MonsterWidget
-
+from monster_kitchen import *
 
 
 class TestScreen(Screen):
     the_app = None
     monster = None
+    first_monster = True
+
+    def play_next(self, *args):
+        if self.intro_counter < len(self.introduction):
+            wav_filename = sounds_path + self.introduction[self.intro_counter]
+            sl = SoundLoader.load(wav_filename)
+            sl.bind(on_stop=self.play_next)
+            self.intro_counter += 1
+            sl.play()
+        else:
+            self.the_app.sm.current = "the_game"
 
     def start(self):
+        self.introduction = [
+                        "Intro_3_Categories.wav",
+                        "Intro_4_Mission.wav",
+                        "categories_1_what",
+                        "categories_2_choose"
+            ]
+
+        self.intro_counter = 0
+
         with self.canvas.before:
             self.bind(size=self.update_pos, pos=self.update_pos)
         self.the_widget = self.ids['the_widget']
@@ -21,7 +41,7 @@ class TestScreen(Screen):
         for at_i, att_type in enumerate(att_types):
             for i, att in enumerate(attributes[att_type]):
                 cw = CategoryWidget()
-                cw.image_id.source = 'items/' + att + '.png'
+                cw.image_id.source = att_path + att + '.png'
                 cw.base_pos = (0.05 + i * 0.15, 0.8 - at_i * 0.3)
                 cw.base_size = (0.15, 0.15)
                 cw.image_id.base_pos = cw.base_pos
@@ -64,25 +84,31 @@ class TestScreen(Screen):
                 if cw.button_id.name is None: pass
                 if 'done' not in cw.button_id.name:
                     cw.button_id.value = False
-                    cw.image_id.source = 'items/' + cw.button_id.name.split(',')[1] + '.png'
+                    cw.image_id.source = att_path + cw.button_id.name.split(',')[1] + '.png'
             except:
                 pass
 
-        self.speak_1()
+        if self.first_monster:
+            self.intro_counter = 0
+            self.first_monster = False
+        else:
+            self.intro_counter = 2
+        self.play_next()
+        # self.speak_1()
 
     def speak_1(self):
-        wav_filename = 'items/sounds/categories_1_what.wav'
+        wav_filename = sounds_path + 'categories_1_what.wav'
         sl = SoundLoader.load(wav_filename)
         sl.bind(on_stop=self.speak_2)
         sl.play()
 
     def speak_2(self, *args):
-        wav_filename = 'items/sounds/categories_2_choose.wav'
+        wav_filename = sounds_path + 'categories_2_choose.wav'
         sl = SoundLoader.load(wav_filename)
         sl.play()
 
     def speak_3(self, *args):
-        wav_filename = 'items/sounds/categories_1_what.wav'
+        wav_filename = sounds_path + 'categories_1_what.wav'
         sl = SoundLoader.load(wav_filename)
         sl.bind(on_stop=self.end_screen)
         sl.play()
@@ -92,9 +118,9 @@ class TestScreen(Screen):
         the_button.value = not the_button.value
         att = the_button.name.split(',')
         if the_button.value:
-            filename = 'items/' + att[1] + '_off.png'
+            filename = att_path + att[1] + '_off.png'
         else:
-            filename = 'items/' + att[1] + '.png'
+            filename = att_path + att[1] + '.png'
         the_button.parent.children[0].source = filename
         KL.log.insert(action=LogAction.press, obj=self.name, comment='value=' + str(the_button.value), sync=False)
 

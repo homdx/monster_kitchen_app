@@ -23,19 +23,20 @@ class IntroScreen(Screen):
     def on_enter(self, *args):
         self.introduction = [
                             "Intro_1_Welcome.wav",
-                            "Intro_2_Monsters_are_coming.wav",
-                            "Intro_3_Categories.wav",
-                            "Intro_4_Mission.wav",
-                            "Intro_5_How.wav",
-                            "Intro_6_after.wav",
-                            "Intro_7_bonappetit.wav"
-                        ]
+                            "Intro_2_Monsters_are_coming.wav"]
+            # ,
+            #                 "Intro_3_Categories.wav",
+            #                 "Intro_4_Mission.wav",
+            #                 "Intro_5_How.wav",
+            #                 "Intro_6_after.wav",
+            #                 "Intro_7_bonappetit.wav"
+
         self.intro_counter = 0
         self.play_next()
 
     def play_next(self, *args):
         if self.intro_counter < len(self.introduction):
-            wav_filename = 'items/sounds/' + self.introduction[self.intro_counter]
+            wav_filename = sounds_path + self.introduction[self.intro_counter]
             sl = SoundLoader.load(wav_filename)
             sl.bind(on_stop=self.play_next)
             self.intro_counter += 1
@@ -87,9 +88,9 @@ class MonsterKitchenApp(App):
         screen.the_app = self
         self.sm.add_widget(screen)
 
-        self.sm.current = 'zero_screen'
+        # self.sm.current = 'zero_screen'
         # self.sm.current = 'test_screen'
-        # self.sm.current = 'intro_screen'
+        self.sm.current = 'intro_screen'
         # self.sm.current = 'the_game'
         return self.sm
 

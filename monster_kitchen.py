@@ -20,9 +20,12 @@ from monster_widget import MonsterWidget
 from functools import partial
 from copy import deepcopy
 
-LANGUAGE = 'English'  # 'Hebrew'
+LANGUAGE = 'Hebrew' #'English'  #
 items_path = 'items/'
-number_of_tries = 6
+lang_path = items_path + LANGUAGE + '/'
+att_path = lang_path + 'att/'
+sounds_path = lang_path + 'sounds/'
+number_of_tries = 1
 
 
 class GameScreen(Screen):
@@ -51,7 +54,7 @@ class GameScreen(Screen):
 
     def end_game(self):
         KL.log.insert(action=LogAction.data, obj='game', comment='the_end', sync=True)
-        wav_filename = 'items/sounds/the_end.wav'
+        wav_filename = sounds_path + 'the_end.wav'
         sl = SoundLoader.load(wav_filename)
         sl.bind(on_stop=self.next_subject)
         sl.play()
@@ -78,6 +81,8 @@ class CuriosityGame:
         self.size = [100,100]
         self.tries = 0
         self.the_app = the_app
+
+        self.time_first = None
 
     def load(self, size=None):
         self.size = size
@@ -125,7 +130,7 @@ class CuriosityGame:
         for i, ai in enumerate(self.attribute_images.values()):
             ai.base_pos = (0.01 + 0.1 * i, 0.80)
             ai.base_size = (0.15, 0.15)
-            ai.image_id.source = 'items/' + descriptors[i] + '.png'
+            ai.image_id.source = att_path + descriptors[i] + '.png'
             ai.disabled = True
 
         # set widgets
@@ -164,8 +169,10 @@ class CuriosityGame:
 
     def start(self):
         self.update_pos_size(self.size)
+        if self.current_monster == 0:
+            # only for first monster, put a timer
+            self.time_first = Clock.schedule_once(self.test_monster, 60.0)
         self.next_monster()
-
 
     def reset_pos(self):
         for i in self.items.values():
@@ -191,7 +198,7 @@ class CuriosityGame:
         # set attributes
         for a_name, a in item.attributes.items():
             ai = self.attribute_images[a_name]
-            the_source = 'items/' + a + '.png'
+            the_source = att_path + a + '.png'
             ai.color = (1, 1, 1, 1)
             ai.image_id.source = the_source
 
@@ -263,28 +270,28 @@ class CuriosityGame:
     def food_tasty(self):
         self.monster.change_img('good')
         if self.monsters['list'][self.current_monster]['wav'] is not '':
-            wav_filename = 'items/sounds/' + self.monsters['list'][self.current_monster]['wav'] + '_2_tasty.wav'
+            wav_filename = sounds_path +  self.monsters['list'][self.current_monster]['wav'] + '_2_tasty.wav'
             SoundLoader.load(wav_filename).play()
 
     def food_ok(self):
         self.monster.change_img('neutral')
         if self.monsters['list'][self.current_monster]['wav'] is not '':
-            wav_filename = 'items/sounds/' + self.monsters['list'][self.current_monster]['wav'] + '_3_ok.wav'
+            wav_filename = sounds_path + self.monsters['list'][self.current_monster]['wav'] + '_3_ok.wav'
             SoundLoader.load(wav_filename).play()
 
     def food_bad(self):
         self.monster.change_img('bad')
         if self.monsters['list'][self.current_monster]['wav'] is not '':
-            wav_filename = 'items/sounds/' + self.monsters['list'][self.current_monster]['wav'] + '_4_bad.wav'
+            wav_filename = sounds_path + self.monsters['list'][self.current_monster]['wav'] + '_4_bad.wav'
             SoundLoader.load(wav_filename).play()
 
     def test_monster(self, dt):
+        if self.time_first:
+            self.time_first.cancel()
         self.the_app.test_monster(self.monster)
 
     def next_monster(self):
         self.tries = number_of_tries
-        # set the timer of the game
-        print('Starting clock...')
         self.change_monster(self.current_monster)
 
         for k, v in self.items.items():
@@ -296,7 +303,7 @@ class CuriosityGame:
 
     def meet_monster(self, dt):
         if self.monsters['list'][self.current_monster]['wav'] is not '':
-            wav_filename = 'items/sounds/' + self.monsters['list'][self.current_monster]['wav'] + '_1_opening.wav'
+            wav_filename = sounds_path + self.monsters['list'][self.current_monster]['wav'] + '_1_opening.wav'
             SoundLoader.load(wav_filename).play()
         else:
             TTS.speak(['I am ', self.monsters['list'][self.current_monster]['name'], ' and i am hungry.'])
