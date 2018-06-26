@@ -24,8 +24,8 @@
         },
         "likes": {
           "type": ["fruit_vegetable"],
-          "color": ["yellow_orange"],
-          "size": ["medium"]
+          "color": ["blue_purple"],
+          "size": ["small"]
         }
       },
       {
@@ -38,9 +38,9 @@
           "eating": ["Asset 12m.png", "Asset 14m.png"]
         },
         "likes": {
-          "type": ["bread_sweet"],
-          "color": ["red"],
-          "size": ["small"]
+          "type": ["liquid"],
+          "color": ["green"],
+          "size": ["medium"]
         }
       },
       {
@@ -53,9 +53,9 @@
           "eating": ["Asset 16m.png", "Asset 17m.png"]
         },
         "likes": {
-          "type": ["fruit_vegetable", "liquid"],
-          "color": ["red", "blue_purple"],
-          "size": []
+          "type": ["bread_sweet"],
+          "color": ["blue_purple"],
+          "size": ["small"]
         }
       },
       {
@@ -69,8 +69,8 @@
         },
         "likes": {
           "type": ["bread_sweet"],
-          "color": ["green", "red"],
-          "size": ["big"]
+          "color": ["red"],
+          "size": ["medium"]
         }
       },
       {
@@ -84,8 +84,8 @@
         },
         "likes": {
           "type": ["fruit_vegetable"],
-          "color": ["blue_purple"],
-          "size": ["small"]
+          "color": ["yellow_orange"],
+          "size": ["big"]
         }
       }
     ]
