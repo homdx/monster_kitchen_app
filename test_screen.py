@@ -45,6 +45,7 @@ class TestScreen(Screen):
                 cw.base_size = (0.15, 0.15)
                 cw.image_id.base_pos = cw.base_pos
                 cw.image_id.base_size = cw.base_size
+                cw.image_id.color = (1.0, 1.0, 1.0, 1.0)
                 cw.button_id.base_pos = cw.base_pos
                 cw.button_id.base_size = cw.base_size
                 cw.button_id.name = att_type + ',' + att
@@ -119,6 +120,7 @@ class TestScreen(Screen):
         sl.play()
 
     def delay_end(self, *args):
+        self.show_answer(False)
         Clock.schedule_once(self.end_screen, 1.0)
 
     def att_pressed(self, *args):
@@ -160,12 +162,12 @@ class TestScreen(Screen):
     def press_finish(self, *args):
         self.log_answer()
         self.show_answer()
-        self.speak_3()
+        self.speak_correct()
 
     def end_screen(self, *args):
         self.the_app.next_monster()
 
-    def show_answer(self):
+    def show_answer(self, show_no_show=True):
         for likes_cat, likes_atts in self.monster.likes.items():
             for likes_att in likes_atts:
                 for cw in self.the_widget.children:
@@ -174,6 +176,9 @@ class TestScreen(Screen):
                         if cw.button_id.name is None: pass
                         if 'done' not in cw.button_id.name:
                             if likes_cat in cw.button_id.name and likes_att in cw.button_id.name:
-                                cw.image_id.color = (0.5, 0.8, 0.7, 0.5)
+                                if show_no_show:
+                                    cw.image_id.color = (0.5, 0.8, 0.7, 0.5)
+                                else:
+                                    cw.image_id.color = (1.0, 1.0, 1.0, 1.0)
                     except:
                         pass
