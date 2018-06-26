@@ -25,7 +25,7 @@ items_path = 'items/'
 lang_path = items_path + LANGUAGE + '/'
 att_path = lang_path + 'att/'
 sounds_path = lang_path + 'sounds/'
-number_of_tries = 1
+number_of_tries = 5
 
 
 class GameScreen(Screen):
