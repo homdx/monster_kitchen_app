@@ -112,6 +112,15 @@ class TestScreen(Screen):
         sl.bind(on_stop=self.end_screen)
         sl.play()
 
+    def speak_correct(self, *args):
+        wav_filename = sounds_path + 'categories_correct.wav'
+        sl = SoundLoader.load(wav_filename)
+        sl.bind(on_stop=self.delay_end)
+        sl.play()
+
+    def delay_end(self, *args):
+        Clock.schedule_once(self.end_screen, 1.0)
+
     def att_pressed(self, *args):
         the_button = args[0]
         the_button.value = not the_button.value
