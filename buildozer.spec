@@ -97,7 +97,7 @@ android.permissions = INTERNET,ACCESS_WIFI_STATE,CHANGE_WIFI_STATE,CHANGE_NETWOR
 
 # (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
 #p4a.source_dir = /home/prg/projects/python-for-android
-p4a.source_dir = /home/python-for-android
+#p4a.source_dir = /home/python-for-android
 
 # (list) python-for-android whitelist
 #android.p4a_whitelist =
